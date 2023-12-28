@@ -8,14 +8,11 @@ body {
   background-color: #a8768a;
 }
 .container {
-  width: 100%;
+  width: 90%; /* Sabit genişlik yerine yüzde kullanın */
   max-width: 37.5em;
   background-color: #debac9;
-  padding: 3em 0.5em;
-  position: absolute;
-  transform: translate(-50%, -50%);
-  top: 50%;
-  left: 50%;
+  padding: 3em 1em; /* Sabit padding yerine göreceli birim kullanın */
+  margin: 0 auto; /* Web sayfanızı ortalamak için margin kullanın */
   border-radius: 0.8em;
 }
 .rules-container ul {
@@ -31,12 +28,9 @@ body {
   width: 90%;
   background-color: #f6ecf0;
   max-width: 35em;
-  padding: 3em 0.5em;
-  position: absolute;
+  padding: 3em 1em; /* Sabit padding yerine göreceli birim kullanın */
+  margin: 0 auto; /* Web sayfanızı ortalamak için margin kullanın */
   border-color: #800856;
-  transform: translate(-50%, -50%);
-  top: 25%;
-  left: 50%;
   border-style: inset;
   border-radius: 2em;
   font-family: "Poppins", sans-serif;
@@ -110,15 +104,13 @@ img {
 }
 
   .controls-container {
-    position: absolute;
-    display: flex;
+    display: flex; /* CSS Flexbox kullanarak bir esnek düzen oluşturun */
     align-items: center;
     justify-content: center;
     height: 100%;
     width: 100%;
   background-color: #a8768a;
   flex-direction: column;
-  top: 0;
  
  
 }
@@ -148,4 +140,5 @@ img {
 .hide {
   display: none;
 }
+
 
