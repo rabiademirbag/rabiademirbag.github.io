@@ -8,7 +8,7 @@ body {
   background-color: #a8768a;
 }
 .container {
-  width: 90%;
+  width: 100%;
   max-width: 37.5em;
   background-color: #debac9;
   padding: 3em 0.5em;
@@ -49,10 +49,15 @@ body {
     -1px -1px 0 #fd66c8;
    font-size: 20px;
 }
-.timer-display {
-  position: fixed;
-  top: 1em;
-  left: 1em;
+@media only screen and (max-width: 600px) {
+  .draggable-image {
+    width: 100%;
+  }
+}
+  .timer-display {
+    position: fixed;
+    top: 2em;
+    left: 2em;
   font-size: 1.2em;
   color: #ffffff;
   font-weight: bold;
@@ -69,8 +74,8 @@ h3 {
 }
 .score-display {
   position: fixed;
-  top: 1em;
-  right: 1em;
+  top: 2em;
+  right: 2em;
   font-size: 1.2em;
   color: #ffffff;
   font-weight: bold;
@@ -104,13 +109,13 @@ img {
   background-color: #e5ffc8;
 }
 
-.controls-container {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  width: 100%;
+  .controls-container {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
   background-color: #a8768a;
   flex-direction: column;
   top: 0;
@@ -143,3 +148,4 @@ img {
 .hide {
   display: none;
 }
+
