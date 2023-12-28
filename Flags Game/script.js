@@ -86,8 +86,9 @@ const stopGame = () => {
 
 function dragStart(e) {
   if (isTouchDevice()) {
-    initialX = e.touches[[1]].clientX;
-    initialY = e.touches[[1]].clientY;
+    e.preventDefault(); // Prevent the default behavior of touch events
+    initialX = e.touches[0].clientX;
+    initialY = e.touches[0].clientY;
     moveElement = true;
     currentElement = e.target;
   } else {
@@ -95,15 +96,23 @@ function dragStart(e) {
   }
 }
 
+
 function dragOver(e) {
   e.preventDefault();
+}
+function touchStart(e) {
+  e.preventDefault(); // Touch davranışını engelle
+  initialX = e.touches[0].clientX;
+  initialY = e.touches[0].clientY;
+  moveElement = true;
+  currentElement = e.target;
 }
 
 const touchMove = (e) => {
   if (moveElement) {
     e.preventDefault();
-    let newX = e.touches[[1]].clientX;
-    let newY = e.touches[[1]].clientY;
+    let newX = e.touches[0].clientX;
+    let newY = e.touches[0].clientY;
     let currentSelectedElement = document.getElementById(e.target.id);
     currentSelectedElement.parentElement.style.top =
       currentSelectedElement.parentElement.offsetTop - (initialY - newY) + "px";
@@ -240,6 +249,7 @@ const creator = () => {
     stopGame(); 
     return;
   }
+  
 
   for (let i = 0; i < totalFlags; i++) {
     let randomFlag = randomValueGenerator();
@@ -277,12 +287,12 @@ const creator = () => {
 
   draggableObjects = document.querySelectorAll(".draggable-image");
   dropPoints = document.querySelectorAll(".countries");
-
+  
   draggableObjects.forEach((element) => {
     element.addEventListener("dragstart", dragStart);
-    element.addEventListener("touchstart", dragStart);
+    element.addEventListener("touchstart", touchStart); // touchstart olayını ekleyin
     element.addEventListener("touchend", drop);
-    element.addEventListener("touchmove", touchMove);
+    element.addEventListener("touchmove", touchMove); // touchmove olayını ekleyin
   });
 
   dropPoints.forEach((element) => {
@@ -314,3 +324,4 @@ startButton.addEventListener("click", () => {
   creator();
   updateScoreDisplay(); 
 });
+
