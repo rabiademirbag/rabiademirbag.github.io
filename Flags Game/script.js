@@ -86,7 +86,7 @@ const stopGame = () => {
 
 function dragStart(e) {
   if (isTouchDevice()) {
-    e.preventDefault(); // Prevent the default behavior of touch events
+    e.preventDefault(); 
     initialX = e.touches[0].clientX;
     initialY = e.touches[0].clientY;
     moveElement = true;
@@ -101,19 +101,18 @@ function dragOver(e) {
   e.preventDefault();
 }
 function touchStart(e) {
-  e.preventDefault(); // Touch davranışını engelle
+  e.preventDefault();
   initialX = e.touches[0].clientX;
   initialY = e.touches[0].clientY;
   moveElement = true;
   currentElement = e.target;
 }
-
-const touchMove = (e) => {
+function touchMove(e) {
   if (moveElement) {
     e.preventDefault();
     let newX = e.touches[0].clientX;
     let newY = e.touches[0].clientY;
-    let currentSelectedElement = document.getElementById(e.target.id);
+    let currentSelectedElement = document.getElementById(currentElement.id);
     currentSelectedElement.parentElement.style.top =
       currentSelectedElement.parentElement.offsetTop - (initialY - newY) + "px";
     currentSelectedElement.parentElement.style.left =
@@ -122,6 +121,7 @@ const touchMove = (e) => {
     initialY = newY;
   }
 };
+
 
 const createTimerDisplay = () => {
   if (!timerDisplay) {
@@ -290,9 +290,9 @@ const creator = () => {
   
   draggableObjects.forEach((element) => {
     element.addEventListener("dragstart", dragStart);
-    element.addEventListener("touchstart", touchStart); // touchstart olayını ekleyin
+    element.addEventListener("touchstart", touchStart);
     element.addEventListener("touchend", drop);
-    element.addEventListener("touchmove", touchMove); // touchmove olayını ekleyin
+    element.addEventListener("touchmove", touchMove);
   });
 
   dropPoints.forEach((element) => {
@@ -324,4 +324,5 @@ startButton.addEventListener("click", () => {
   creator();
   updateScoreDisplay(); 
 });
+
 
