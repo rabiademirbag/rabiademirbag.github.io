@@ -50,8 +50,14 @@ body {
    font-size: 20px;
 }
 @media only screen and (max-width: 600px) {
-  .draggable-image {
-    width: 100%;
+  .controls-container {
+    position: static;
+    margin-top: 1em;
+  }
+
+  .container {
+    width: 90%;
+    max-width: none;
   }
 }
   .timer-display {
