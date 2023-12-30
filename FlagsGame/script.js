@@ -92,18 +92,17 @@ gameStarted = false;
 };
 function dragStart(e) {
   if (isTouchDevice()) {
-    e.preventDefault();  // Add this line to prevent default touch event behavior
+    e.preventDefault();  
+    e.target.ontouchmove = touchMove;
     initialX = e.touches[0].clientX;
     initialY = e.touches[0].clientY;
+    
     moveElement = true;
     currentElement = e.target;
   } else if (e.dataTransfer) {
-    // use e.dataTransfer only for mouse devices
     e.dataTransfer.setData("text", e.target.id);
   }
 }
-
-
 
 function dragOver(e) {
 e.preventDefault();
@@ -182,10 +181,15 @@ const drop = (e) => {
         "afterbegin",
         `<img src= "${currentElement.id}.png">`
       );
-      score += 2;
+      score += 1;
       count++;
+      correctSound.play();
+      checkWin();
+
     } else {
       score -= 1;
+      wrongSound.play();
+
     }
   } else {
     // Use e.dataTransfer only for mouse devices
@@ -219,24 +223,24 @@ const drop = (e) => {
 
 
 const checkWin = () => {
-if (count === totalFlags) {
-result.innerText = `You Matched ${totalFlags} Flags! Total Score: ${score}`;
-count = 0;
-totalFlags += 3;
+  if (count === totalFlags) {
+    result.innerText = `You Matched ${totalFlags} Flags! Total Score: ${score}`;
+    count = 0;
+    totalFlags += 3;
+    
+    updateScoreDisplay();
+    
+    clearInterval(timer);
 
-updateScoreDisplay();
-
-clearInterval(timer); 
-
-setTimeout(() => {
-  creator();
-  result.innerText = "";
-  timeRemaining = 10; 
-  startTimer();
-}, 1000);
-
-}
+    setTimeout(() => {
+      creator();
+      result.innerText = "";
+      timeRemaining = 10;
+      startTimer();
+    }, 1000);
+  }
 };
+
 
 const creator = () => {
   totalFlags = 3;
