@@ -51,6 +51,7 @@ body {
 }
 @media only screen and (max-width: 600px) {
   .controls-container {
+    display: grid;
     position: static;
     margin-top: 1em;
   }
@@ -60,6 +61,21 @@ body {
     max-width: none;
   }
 }
+
+@media only screen and (max-width: 600px) {
+  .draggable-objects,
+  .drop-points {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .draggable-image,
+  img {
+    width: 6em; /* Adjust the width of flags for smaller screens */
+  }
+}
+
+
   .timer-display {
     position: fixed;
     top: 2em;
