@@ -59,16 +59,15 @@ const updateScoreDisplay = () => {
   }
 };
 
-
 const isTouchDevice = () => {
-try {
-document.createEvent("TouchEvent");
-deviceType = "touch";
-return true;
-} catch (e) {
-deviceType = "mouse";
-return false;
-}
+  try {
+    document.createEvent("TouchEvent");
+    deviceType = "touch";
+    return true;
+  } catch (e) {
+    deviceType = "mouse";
+    return false;
+  }
 };
 
 let count = 0;
@@ -91,38 +90,40 @@ startButton.classList.remove("hide");
 clearInterval(timer);
 gameStarted = false;
 };
-
 function dragStart(e) {
+  if (isTouchDevice()) {
+    e.preventDefault();  // Add this line to prevent default touch event behavior
+    initialX = e.touches[0].clientX;
+    initialY = e.touches[0].clientY;
+    moveElement = true;
+    currentElement = e.target;
+  } else if (e.dataTransfer) {
+    // use e.dataTransfer only for mouse devices
+    e.dataTransfer.setData("text", e.target.id);
+  }
+}
 
-if (isTouchDevice()) {
-initialX = e.touches[[1]].clientX;
-initialY = e.touches[[1]].clientY;
-moveElement = true;
-currentElement = e.target;
-} else {
-e.dataTransfer.setData("text", e.target.id);
-}
-}
+
 
 function dragOver(e) {
 e.preventDefault();
 }
 
-
 const touchMove = (e) => {
-if (moveElement) {
-e.preventDefault();
-let newX = e.touches[[1]].clientX;
-let newY = e.touches[[1]].clientY;
-let currentSelectedElement = document.getElementById(e.target.id);
-currentSelectedElement.parentElement.style.top =
-currentSelectedElement.parentElement.offsetTop - (initialY - newY) + "px";
-currentSelectedElement.parentElement.style.left =
-currentSelectedElement.parentElement.offsetLeft - (initialX - newX) + "px";
-initialX = newX;
-initialY = newY;
-}
+  if (moveElement) {
+    e.preventDefault();
+    let newX = e.touches[0].clientX;
+    let newY = e.touches[0].clientY;
+    let currentSelectedElement = document.getElementById(e.target.id);
+    currentSelectedElement.parentElement.style.top =
+      currentSelectedElement.parentElement.offsetTop - (initialY - newY) + "px";
+    currentSelectedElement.parentElement.style.left =
+      currentSelectedElement.parentElement.offsetLeft - (initialX - newX) + "px";
+    initialX = newX;
+    initialY = newY;
+  }
 };
+
 
 const createTimerDisplay = () => {
   timerDisplay = document.createElement("div");
@@ -158,55 +159,64 @@ startTimer();
 };
 
 const drop = (e) => {
-e.preventDefault();
+  e.preventDefault();
 
-if (isTouchDevice()) {
-moveElement = false;
-const currentDrop = document.querySelector(`div[data-id='${e.target.id}']`);
-const currentDropBound = currentDrop.getBoundingClientRect();
+  if (isTouchDevice()) {
+    moveElement = false;
 
-if (
-initialX >= currentDropBound.left &&
-initialX <= currentDropBound.right &&
-initialY >= currentDropBound.top &&
-initialY <= currentDropBound.bottom
-) {
-currentDrop.classList.add("dropped");
-currentElement.classList.add("hide");
-currentDrop.innerHTML = ``;
-currentDrop.insertAdjacentHTML(
-"afterbegin",
-`<img src= "${currentElement.id}.png">`
-);
-score += 2;
-count++; 
-} else {
-score -= 1; 
-}
-} else {
-const draggedElementData = e.dataTransfer.getData("text");
-const droppableElementData = e.target.getAttribute("data-id");
-if (draggedElementData === droppableElementData) {
-const draggedElement = document.getElementById(draggedElementData);
-e.target.classList.add("dropped");
-draggedElement.classList.add("hide");
-draggedElement.setAttribute("draggable", "false");
-e.target.innerHTML = ``;
-e.target.insertAdjacentHTML(
-"afterbegin",
-`<img src="${draggedElementData}.png">`
-);
-score += 1; 
-count++; 
-correctSound.play(); 
-checkWin();
-} else {
-score -= 1; 
-wrongSound.play(); 
-}
-}
-updateScoreDisplay();
+    // For touch devices, use the currentElement directly
+    const currentDrop = document.querySelector(`div[data-id='${currentElement.id}']`);
+
+    const currentDropBound = currentDrop.getBoundingClientRect();
+
+    if (
+      initialX >= currentDropBound.left &&
+      initialX <= currentDropBound.right &&
+      initialY >= currentDropBound.top &&
+      initialY <= currentDropBound.bottom
+    ) {
+      currentDrop.classList.add("dropped");
+      currentElement.classList.add("hide");
+      currentDrop.innerHTML = ``;
+      currentDrop.insertAdjacentHTML(
+        "afterbegin",
+        `<img src= "${currentElement.id}.png">`
+      );
+      score += 2;
+      count++;
+    } else {
+      score -= 1;
+    }
+  } else {
+    // Use e.dataTransfer only for mouse devices
+    if (e.dataTransfer) {
+      const draggedElementData = e.dataTransfer.getData("text");
+      const droppableElementData = e.target.getAttribute("data-id");
+
+      if (draggedElementData === droppableElementData) {
+        const draggedElement = document.getElementById(draggedElementData);
+        e.target.classList.add("dropped");
+        draggedElement.classList.add("hide");
+        draggedElement.setAttribute("draggable", "false");
+        e.target.innerHTML = ``;
+        e.target.insertAdjacentHTML(
+          "afterbegin",
+          `<img src="${draggedElementData}.png">`
+        );
+        score += 1;
+        count++;
+        correctSound.play();
+        checkWin();
+      } else {
+        score -= 1;
+        wrongSound.play();
+      }
+    }
+  }
+  updateScoreDisplay();
 };
+
+
 
 const checkWin = () => {
 if (count === totalFlags) {
