@@ -229,12 +229,12 @@ updateScoreDisplay();
 clearInterval(timer); 
 
 setTimeout(() => {
-creator();
-result.innerText = "";
-timeRemaining = 10; 
-startTimer();
-flags
+  creator();
+  result.innerText = "";
+  timeRemaining = 10; 
+  startTimer();
 }, 1000);
+
 }
 };
 
