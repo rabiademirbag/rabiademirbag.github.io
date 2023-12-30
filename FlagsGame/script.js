@@ -1,64 +1,74 @@
 let draggableObjects;
 let dropPoints;
 const startButton = document.getElementById("start");
+const rulesContainer = document.querySelector(".rules-container");
 const result = document.getElementById("result");
 const controls = document.querySelector(".controls-container");
 const dragContainer = document.querySelector(".draggable-objects");
 const dropContainer = document.querySelector(".drop-points");
-const rulesContainer = document.querySelector(".rules-container"); // Add this line
 const data = [
-  "belgium",
-  "bhutan",
-  "brazil",
-  "china",
-  "cuba",
-  "ecuador",
-  "georgia",
-  "germany",
-  "hong-kong",
-  "india",
-  "iran",
-  "myanmar",
-  "norway",
-  "spain",
-  "sri-lanka",
-  "sweden",
-  "switzerland",
-  "united-states",
-  "uruguay",
-  "wales",
+"belgium",
+"bhutan",
+"brazil",
+"china",
+"cuba",
+"ecuador",
+"georgia",
+"germany",
+"hong-kong",
+"india",
+"iran",
+"myanmar",
+"norway",
+"spain",
+"sri-lanka",
+"sweden",
+"switzerland",
+"united-states",
+"uruguay",
+"wales",
 ];
 let score = 0;
 let scoreDisplay;
 let deviceType = "";
 let initialX = 0,
-  initialY = 0;
+initialY = 0;
 let currentElement = "";
 let moveElement = false;
 let timer;
-let timeRemaining = 15;
+let timeRemaining = 10;
 let timerDisplay;
 let correctSound = new Audio("true.mp3");
 let wrongSound = new Audio("wrong.mp3");
 let gameStarted = false;
-let isGameActive = false;
+
+const createScoreDisplay = () => {
+  scoreDisplay = document.createElement("div");
+  scoreDisplay.classList.add("score-display");
+  document.body.appendChild(scoreDisplay);
+
+  createTimerDisplay();
+};
 
 const updateScoreDisplay = () => {
   if (scoreDisplay && timerDisplay) {
     scoreDisplay.innerText = `Score: ${score}`;
-    timerDisplay.innerText = `Time: ${timeRemaining}s`;
+    if (gameStarted) {
+      timerDisplay.innerText = `Time: ${timeRemaining}s`;
+    }
   }
 };
 
+
 const isTouchDevice = () => {
-  try {
-    document.createEvent("TouchEvent");
-    deviceType = "touch";
-    return true;
-  } catch (e) {
-    deviceType = "mouse";
-    return false;
-  }
+try {
+document.createEvent("TouchEvent");
+deviceType = "touch";
+return true;
+} catch (e) {
+deviceType = "mouse";
+return false;
+}
 };
 
 let count = 0;
@@ -66,176 +76,156 @@ let totalFlags = 3;
 let remainingCountries = [...data];
 
 const randomValueGenerator = () => {
-  if (remainingCountries.length === 0) {
-    remainingCountries = [...data];
-  }
-  const index = Math.floor(Math.random() * remainingCountries.length);
-  const randomValue = remainingCountries[index];
-  remainingCountries.splice(index, 1); 
-  return randomValue;
+if (remainingCountries.length === 0) {
+remainingCountries = [...data];
+}
+const index = Math.floor(Math.random() * remainingCountries.length);
+const randomValue = remainingCountries[index];
+remainingCountries.splice(index, 1); 
+return randomValue;
 };
 
 const stopGame = () => {
-  controls.classList.remove("hide");
-  startButton.classList.remove("hide");
-  clearInterval(timer);
-  gameStarted = false;
-  isGameActive = false; 
-  timerDisplay.textContent = "";
+controls.classList.remove("hide");
+startButton.classList.remove("hide");
+clearInterval(timer);
+gameStarted = false;
 };
 
 function dragStart(e) {
-  if (isTouchDevice()) {
-    e.preventDefault(); 
-    initialX = e.touches[0].clientX;
-    initialY = e.touches[0].clientY;
-    moveElement = true;
-    currentElement = e.target;
-  } else {
-    e.dataTransfer.setData("text", e.target.id);
-  }
-}
 
+if (isTouchDevice()) {
+initialX = e.touches[[1]].clientX;
+initialY = e.touches[[1]].clientY;
+moveElement = true;
+currentElement = e.target;
+} else {
+e.dataTransfer.setData("text", e.target.id);
+}
+}
 
 function dragOver(e) {
-  e.preventDefault();
+e.preventDefault();
 }
-function touchStart(e) {
-  e.preventDefault();
-  initialX = e.touches[0].clientX;
-  initialY = e.touches[0].clientY;
-  moveElement = true;
-  currentElement = e.target;
-}
-function touchMove(e) {
-  if (moveElement) {
-    e.preventDefault();
-    let newX = e.touches[0].clientX;
-    let newY = e.touches[0].clientY;
-    let currentSelectedElement = document.getElementById(currentElement.id);
-    currentSelectedElement.parentElement.style.top =
-      currentSelectedElement.parentElement.offsetTop - (initialY - newY) + "px";
-    currentSelectedElement.parentElement.style.left =
-      currentSelectedElement.parentElement.offsetLeft - (initialX - newX) + "px";
-    initialX = newX;
-    initialY = newY;
-  }
-};
 
+
+const touchMove = (e) => {
+if (moveElement) {
+e.preventDefault();
+let newX = e.touches[[1]].clientX;
+let newY = e.touches[[1]].clientY;
+let currentSelectedElement = document.getElementById(e.target.id);
+currentSelectedElement.parentElement.style.top =
+currentSelectedElement.parentElement.offsetTop - (initialY - newY) + "px";
+currentSelectedElement.parentElement.style.left =
+currentSelectedElement.parentElement.offsetLeft - (initialX - newX) + "px";
+initialX = newX;
+initialY = newY;
+}
+};
 
 const createTimerDisplay = () => {
-  if (!timerDisplay) {
-    timerDisplay = document.createElement("div");
-    timerDisplay.classList.add("timer-display");
-    document.body.appendChild(timerDisplay);
-  }
-};
-
-const createScoreDisplay = () => {
-  if (!scoreDisplay) {
-    scoreDisplay = document.createElement("div");
-    scoreDisplay.classList.add("score-display");
-    document.body.appendChild(scoreDisplay);
-  }
+  timerDisplay = document.createElement("div");
+  timerDisplay.classList.add("timer-display");
+  document.body.appendChild(timerDisplay);
 };
 
 const startTimer = () => {
-  if (isGameActive) {
-    timer = setInterval(() => {
-      timeRemaining--;
-      updateScoreDisplay(); 
+timer = setInterval(() => {
+timeRemaining--;
+updateScoreDisplay(); 
 
-      if (timeRemaining <= 0) {
-        clearInterval(timer); 
-        score -= 5;
-        updateScoreDisplay();
-        resetGame();
-      }
-    }, 1000);
-  }
+if (timeRemaining <= 0) {
+clearInterval(timer);
+score -= 5; 
+updateScoreDisplay();
+resetGame();
+}
+}, 1000);
 };
-
 const resetGame = () => {
-  count = 0;
-  totalFlags += 3;
+count = 0;
+totalFlags += 3;
 
+updateScoreDisplay();
 
-  updateScoreDisplay();
-
-  setTimeout(() => {
-    creator();
-    result.innerText = "";
-    timeRemaining = 15; 
-
-  }, 1000);
+setTimeout(() => {
+creator();
+result.innerText = "";
+timeRemaining = 10; 
+startTimer(); 
+}, 1000);
 };
 
 const drop = (e) => {
-  e.preventDefault();
+e.preventDefault();
 
-  if (isTouchDevice()) {
-    moveElement = false;
-    const currentDrop = document.querySelector(`div[data-id='${e.target.id}']`);
-    const currentDropBound = currentDrop.getBoundingClientRect();
+if (isTouchDevice()) {
+moveElement = false;
+const currentDrop = document.querySelector(`div[data-id='${e.target.id}']`);
+const currentDropBound = currentDrop.getBoundingClientRect();
 
-    if (
-      initialX >= currentDropBound.left &&
-      initialX <= currentDropBound.right &&
-      initialY >= currentDropBound.top &&
-      initialY <= currentDropBound.bottom
-    ) {
-      currentDrop.classList.add("dropped");
-      currentElement.classList.add("hide");
-      currentDrop.innerHTML = ``;
-      currentDrop.insertAdjacentHTML(
-        "afterbegin",
-        `<img src= "${currentElement.id}.png">`
-      );
-      score += 2; 
-      count++; 
-    } else {
-      score -= 1; 
-    }
-  } else {
-    const draggedElementData = e.dataTransfer.getData("text");
-    const droppableElementData = e.target.getAttribute("data-id");
-    if (draggedElementData === droppableElementData) {
-      const draggedElement = document.getElementById(draggedElementData);
-      e.target.classList.add("dropped");
-      draggedElement.classList.add("hide");
-      draggedElement.setAttribute("draggable", "false");
-      e.target.innerHTML = ``;
-      e.target.insertAdjacentHTML(
-        "afterbegin",
-        `<img src="${draggedElementData}.png">`
-      );
-      score += 1; 
-      count++; 
-      correctSound.play(); 
-      checkWin();
-    } else {
-      score -= 1;
-      wrongSound.play();
-    }
-  }
-  updateScoreDisplay();
+if (
+initialX >= currentDropBound.left &&
+initialX <= currentDropBound.right &&
+initialY >= currentDropBound.top &&
+initialY <= currentDropBound.bottom
+) {
+currentDrop.classList.add("dropped");
+currentElement.classList.add("hide");
+currentDrop.innerHTML = ``;
+currentDrop.insertAdjacentHTML(
+"afterbegin",
+`<img src= "${currentElement.id}.png">`
+);
+score += 2;
+count++; 
+} else {
+score -= 1; 
+}
+} else {
+const draggedElementData = e.dataTransfer.getData("text");
+const droppableElementData = e.target.getAttribute("data-id");
+if (draggedElementData === droppableElementData) {
+const draggedElement = document.getElementById(draggedElementData);
+e.target.classList.add("dropped");
+draggedElement.classList.add("hide");
+draggedElement.setAttribute("draggable", "false");
+e.target.innerHTML = ``;
+e.target.insertAdjacentHTML(
+"afterbegin",
+`<img src="${draggedElementData}.png">`
+);
+score += 1; 
+count++; 
+correctSound.play(); 
+checkWin();
+} else {
+score -= 1; 
+wrongSound.play(); 
+}
+}
+updateScoreDisplay();
 };
 
 const checkWin = () => {
-  if (count === totalFlags) {
-    result.innerText = `You Matched ${totalFlags} Flags! Total Score: ${score}`;
-    count = 0;
-    totalFlags += 3;
+if (count === totalFlags) {
+result.innerText = `You Matched ${totalFlags} Flags! Total Score: ${score}`;
+count = 0;
+totalFlags += 3;
 
-    updateScoreDisplay();
-    clearInterval(timer); 
-    setTimeout(() => {
-      creator();
-      result.innerText = "";
-      timeRemaining = 15; 
-      startTimer(); 
-    }, 1000);
-  }
+updateScoreDisplay();
+
+clearInterval(timer); 
+
+setTimeout(() => {
+creator();
+result.innerText = "";
+timeRemaining = 10; 
+startTimer();
+flags
+}, 1000);
+}
 };
 
 const creator = () => {
@@ -249,7 +239,6 @@ const creator = () => {
     stopGame(); 
     return;
   }
-  
 
   for (let i = 0; i < totalFlags; i++) {
     let randomFlag = randomValueGenerator();
@@ -275,22 +264,26 @@ const creator = () => {
 
     const countryDiv = document.createElement("div");
     countryDiv.innerHTML = `<div class='countries' data-id='${randomCountries[i]}'>
-    ${randomCountries[i].charAt(0).toUpperCase() + randomCountries[i].slice(1).replace("-", " ")}
+      ${randomCountries[i].charAt(0).toUpperCase() + randomCountries[i].slice(1).replace("-", " ")}
     </div>`;
     dropContainer.appendChild(countryDiv);
   }
 
   if (!scoreDisplay) {
     createScoreDisplay();
+    if (!timerDisplay) {
+      createTimerDisplay();
+    } else {
+      updateScoreDisplay();
+    }
   }
-  updateScoreDisplay();
 
   draggableObjects = document.querySelectorAll(".draggable-image");
   dropPoints = document.querySelectorAll(".countries");
-  
+
   draggableObjects.forEach((element) => {
     element.addEventListener("dragstart", dragStart);
-    element.addEventListener("touchstart", touchStart);
+    element.addEventListener("touchstart", dragStart);
     element.addEventListener("touchend", drop);
     element.addEventListener("touchmove", touchMove);
   });
@@ -302,25 +295,30 @@ const creator = () => {
 
   if (!gameStarted) {
     gameStarted = true;
-    isGameActive = true; 
     startTimer();
   }
 };
 
 startButton.addEventListener("click", () => {
+  rulesContainer.classList.add("hide");
   controls.classList.add("hide");
   startButton.classList.add("hide");
-  rulesContainer.style.display = "none"; 
+
   if (timer) {
     clearInterval(timer);
   }
+
   score = 0;
-  timeRemaining = 15;
+  timeRemaining = 10;
   gameStarted = false;
-  isGameActive = true; 
   remainingCountries = [...data];
-  createTimerDisplay();
+  if (scoreDisplay) scoreDisplay.remove();
+  if (timerDisplay) timerDisplay.remove();
   result.innerText = "";
+
+  createScoreDisplay(); 
   creator();
   updateScoreDisplay(); 
+
+  gameStarted = true;
 });
