@@ -114,14 +114,16 @@ const touchMove = (e) => {
     let newX = e.touches[0].clientX;
     let newY = e.touches[0].clientY;
     let currentSelectedElement = document.getElementById(e.target.id);
-    currentSelectedElement.parentElement.style.top =
-      currentSelectedElement.parentElement.offsetTop - (initialY - newY) + "px";
-    currentSelectedElement.parentElement.style.left =
-      currentSelectedElement.parentElement.offsetLeft - (initialX - newX) + "px";
+
+    currentSelectedElement.style.position ='relative';
+    currentSelectedElement.style.left = newX - initialX + 'px';
+    currentSelectedElement.style.top = newY - initialY + 'px';
+
     initialX = newX;
     initialY = newY;
   }
 };
+
 
 
 const createTimerDisplay = () => {
@@ -163,9 +165,7 @@ const drop = (e) => {
   if (isTouchDevice()) {
     moveElement = false;
 
-    // For touch devices, use the currentElement directly
     const currentDrop = document.querySelector(`div[data-id='${currentElement.id}']`);
-
     const currentDropBound = currentDrop.getBoundingClientRect();
 
     if (
@@ -192,7 +192,6 @@ const drop = (e) => {
 
     }
   } else {
-    // Use e.dataTransfer only for mouse devices
     if (e.dataTransfer) {
       const draggedElementData = e.dataTransfer.getData("text");
       const droppableElementData = e.target.getAttribute("data-id");
@@ -271,7 +270,7 @@ const creator = () => {
     flagDiv.classList.add("draggable-image");
     flagDiv.setAttribute("draggable", true);
     if (isTouchDevice()) {
-      flagDiv.style.position = "absolute";
+      flagDiv.style.position = "relative";
     }
     flagDiv.innerHTML = `<img src="${randomFlags[i]}.png" id="${randomFlags[i]}">`;
     dragContainer.appendChild(flagDiv);
@@ -314,6 +313,7 @@ const creator = () => {
 };
 
 startButton.addEventListener("click", () => {
+
   rulesContainer.classList.add("hide");
   controls.classList.add("hide");
   startButton.classList.add("hide");
