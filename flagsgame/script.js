@@ -7,32 +7,32 @@ const controls = document.querySelector(".controls-container");
 const dragContainer = document.querySelector(".draggable-objects");
 const dropContainer = document.querySelector(".drop-points");
 const data = [
-"belgium",
-"bhutan",
-"brazil",
-"china",
-"cuba",
-"ecuador",
-"georgia",
-"germany",
-"hong-kong",
-"india",
-"iran",
-"myanmar",
-"norway",
-"spain",
-"sri-lanka",
-"sweden",
-"switzerland",
-"united-states",
-"uruguay",
-"wales",
+  "belgium",
+  "bhutan",
+  "brazil",
+  "china",
+  "cuba",
+  "ecuador",
+  "georgia",
+  "germany",
+  "hong-kong",
+  "india",
+  "iran",
+  "myanmar",
+  "norway",
+  "spain",
+  "sri-lanka",
+  "sweden",
+  "switzerland",
+  "united-states",
+  "uruguay",
+  "wales",
 ];
 let score = 0;
 let scoreDisplay;
 let deviceType = "";
 let initialX = 0,
-initialY = 0;
+  initialY = 0;
 let currentElement = "";
 let moveElement = false;
 let timer;
@@ -75,28 +75,28 @@ let totalFlags = 3;
 let remainingCountries = [...data];
 
 const randomValueGenerator = () => {
-if (remainingCountries.length === 0) {
-remainingCountries = [...data];
-}
-const index = Math.floor(Math.random() * remainingCountries.length);
-const randomValue = remainingCountries[index];
-remainingCountries.splice(index, 1); 
-return randomValue;
+  if (remainingCountries.length === 0) {
+    remainingCountries = [...data];
+  }
+  const index = Math.floor(Math.random() * remainingCountries.length);
+  const randomValue = remainingCountries[index];
+  remainingCountries.splice(index, 1);
+  return randomValue;
 };
 
 const stopGame = () => {
-controls.classList.remove("hide");
-startButton.classList.remove("hide");
-clearInterval(timer);
-gameStarted = false;
+  controls.classList.remove("hide");
+  startButton.classList.remove("hide");
+  clearInterval(timer);
+  gameStarted = false;
 };
 function dragStart(e) {
   if (isTouchDevice()) {
-    e.preventDefault();  
+    e.preventDefault();
     e.target.ontouchmove = touchMove;
     initialX = e.touches[0].clientX;
     initialY = e.touches[0].clientY;
-    
+
     moveElement = true;
     currentElement = e.target;
   } else if (e.dataTransfer) {
@@ -105,7 +105,7 @@ function dragStart(e) {
 }
 
 function dragOver(e) {
-e.preventDefault();
+  e.preventDefault();
 }
 
 const touchMove = (e) => {
@@ -115,16 +115,14 @@ const touchMove = (e) => {
     let newY = e.touches[0].clientY;
     let currentSelectedElement = document.getElementById(e.target.id);
 
-    currentSelectedElement.style.position ='relative';
-    currentSelectedElement.style.left = newX - initialX + 'px';
-    currentSelectedElement.style.top = newY - initialY + 'px';
+    currentSelectedElement.style.position = "relative";
+    currentSelectedElement.style.left = newX - initialX + "px";
+    currentSelectedElement.style.top = newY - initialY + "px";
 
     initialX = newX;
     initialY = newY;
   }
 };
-
-
 
 const createTimerDisplay = () => {
   timerDisplay = document.createElement("div");
@@ -133,30 +131,30 @@ const createTimerDisplay = () => {
 };
 
 const startTimer = () => {
-timer = setInterval(() => {
-timeRemaining--;
-updateScoreDisplay(); 
+  timer = setInterval(() => {
+    timeRemaining--;
+    updateScoreDisplay();
 
-if (timeRemaining <= 0) {
-clearInterval(timer);
-score -= 5; 
-updateScoreDisplay();
-resetGame();
-}
-}, 1000);
+    if (timeRemaining <= 0) {
+      clearInterval(timer);
+      score -= 5;
+      updateScoreDisplay();
+      resetGame();
+    }
+  }, 1000);
 };
 const resetGame = () => {
-count = 0;
-totalFlags += 3;
+  count = 0;
+  totalFlags += 3;
 
-updateScoreDisplay();
+  updateScoreDisplay();
 
-setTimeout(() => {
-creator();
-result.innerText = "";
-timeRemaining = 10; 
-startTimer(); 
-}, 1000);
+  setTimeout(() => {
+    creator();
+    result.innerText = "";
+    timeRemaining = 10;
+    startTimer();
+  }, 1000);
 };
 
 const drop = (e) => {
@@ -165,7 +163,9 @@ const drop = (e) => {
   if (isTouchDevice()) {
     moveElement = false;
 
-    const currentDrop = document.querySelector(`div[data-id='${currentElement.id}']`);
+    const currentDrop = document.querySelector(
+      `div[data-id='${currentElement.id}']`
+    );
     const currentDropBound = currentDrop.getBoundingClientRect();
 
     if (
@@ -185,11 +185,9 @@ const drop = (e) => {
       count++;
       correctSound.play();
       checkWin();
-
     } else {
       score -= 1;
       wrongSound.play();
-
     }
   } else {
     if (e.dataTransfer) {
@@ -219,16 +217,14 @@ const drop = (e) => {
   updateScoreDisplay();
 };
 
-
-
 const checkWin = () => {
   if (count === totalFlags) {
     result.innerText = `You Matched ${totalFlags} Flags! Total Score: ${score}`;
     count = 0;
     totalFlags += 3;
-    
+
     updateScoreDisplay();
-    
+
     clearInterval(timer);
 
     setTimeout(() => {
@@ -240,7 +236,6 @@ const checkWin = () => {
   }
 };
 
-
 const creator = () => {
   totalFlags = 3;
   dragContainer.innerHTML = "";
@@ -249,7 +244,7 @@ const creator = () => {
   let randomCountries = [];
 
   if (remainingCountries.length === 0) {
-    stopGame(); 
+    stopGame();
     return;
   }
 
@@ -276,8 +271,13 @@ const creator = () => {
     dragContainer.appendChild(flagDiv);
 
     const countryDiv = document.createElement("div");
-    countryDiv.innerHTML = `<div class='countries' data-id='${randomCountries[i]}'>
-      ${randomCountries[i].charAt(0).toUpperCase() + randomCountries[i].slice(1).replace("-", " ")}
+    countryDiv.innerHTML = `<div class='countries' data-id='${
+      randomCountries[i]
+    }'>
+      ${
+        randomCountries[i].charAt(0).toUpperCase() +
+        randomCountries[i].slice(1).replace("-", " ")
+      }
     </div>`;
     dropContainer.appendChild(countryDiv);
   }
@@ -313,7 +313,6 @@ const creator = () => {
 };
 
 startButton.addEventListener("click", () => {
-
   rulesContainer.classList.add("hide");
   controls.classList.add("hide");
   startButton.classList.add("hide");
@@ -330,9 +329,9 @@ startButton.addEventListener("click", () => {
   if (timerDisplay) timerDisplay.remove();
   result.innerText = "";
 
-  createScoreDisplay(); 
+  createScoreDisplay();
   creator();
-  updateScoreDisplay(); 
+  updateScoreDisplay();
 
   gameStarted = true;
 });
