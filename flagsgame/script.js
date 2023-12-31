@@ -36,7 +36,7 @@ let initialX = 0,
 let currentElement = "";
 let moveElement = false;
 let timer;
-let timeRemaining = 10;
+let timeRemaining = 13;
 let timerDisplay;
 let correctSound = new Audio("true.mp3");
 let wrongSound = new Audio("wrong.mp3");
@@ -152,7 +152,7 @@ const resetGame = () => {
   setTimeout(() => {
     creator();
     result.innerText = "";
-    timeRemaining = 10;
+    timeRemaining = 13;
     startTimer();
   }, 1000);
 };
@@ -230,7 +230,7 @@ const checkWin = () => {
     setTimeout(() => {
       creator();
       result.innerText = "";
-      timeRemaining = 10;
+      timeRemaining = 13;
       startTimer();
     }, 1000);
   }
@@ -322,7 +322,7 @@ startButton.addEventListener("click", () => {
   }
 
   score = 0;
-  timeRemaining = 10;
+  timeRemaining = 13;
   gameStarted = false;
   remainingCountries = [...data];
   if (scoreDisplay) scoreDisplay.remove();
